@@ -40,7 +40,6 @@ const CheckoutSection = () => {
 
   const debouncedForCallingAPI = useCallback(
     debounce(() => {
-      console.log(cartSelector);
       addProductMutation.mutate();
     }, 1000),
     [cartSelector]
