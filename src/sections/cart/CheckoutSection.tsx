@@ -11,12 +11,15 @@ import { addProductToCart } from "../../helpers/api/ApiFunctions";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../types/intialStateType";
 import { intializeCart } from "../../store/actions/cartActions";
+import { useIsFocused } from "@react-navigation/native";
 
 const CheckoutSection = () => {
   const [selectedProducts, setSelectedProducts] = useState<ProductInCart[]>([]);
 
   const cartSelector = useSelector((state: RootState) => state.cartReducer.cart);
   const dispatch = useDispatch();
+
+  const isFocused = useIsFocused();
 
   const queryClient = useQueryClient();
 
@@ -37,7 +40,7 @@ const CheckoutSection = () => {
 
   const debouncedForCallingAPI = useCallback(
     debounce(() => {
-      //   console.log(cart);
+      console.log(cartSelector);
       addProductMutation.mutate();
     }, 1000),
     [cartSelector]
@@ -91,7 +94,7 @@ const CheckoutSection = () => {
 
   useEffect(() => {
     debouncedForCallingAPI();
-  }, [cartSelector, debouncedForCallingAPI]);
+  }, [cartSelector, debouncedForCallingAPI, isFocused]);
 
   return (
     <View className="w-full">
@@ -118,11 +121,12 @@ const CheckoutSection = () => {
 
       {/* cards */}
 
-      {cartSelector.length > 0 && cartSelector[0].products.length > 0 && (
+      {cartSelector[0].products && (
         <FlatList
           data={cartSelector[0].products}
           contentContainerStyle={{ paddingBottom: 90 }}
           // keyExtractor={(item, index) => item.id.toString()}
+          extraData={cartSelector[0].products}
           renderItem={({ item, index }) => {
             return (
               <ProductCardForTheCart
