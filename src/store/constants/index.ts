@@ -1,0 +1,2 @@
+export const INTIALIZE_CART = "INTIALIZE_CART";
+export const HIDE_TABBAR = "HIDE_TABBAR";
